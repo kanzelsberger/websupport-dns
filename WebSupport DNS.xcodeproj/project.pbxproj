@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		435B27D00EEC4A24412B24EA /* libPods-WebSupport DNS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3536A8CDD8CCA5EA74BCE2C6 /* libPods-WebSupport DNS.a */; };
 		E9F84FE4217686A600A61C2D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F84FE3217686A600A61C2D /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +24,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3536A8CDD8CCA5EA74BCE2C6 /* libPods-WebSupport DNS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WebSupport DNS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B0C50E11B7113834052C20B /* Pods-WebSupport DNS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebSupport DNS.release.xcconfig"; path = "Pods/Target Support Files/Pods-WebSupport DNS/Pods-WebSupport DNS.release.xcconfig"; sourceTree = "<group>"; };
+		C5B9D05A92299567968831FD /* Pods-WebSupport DNS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebSupport DNS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WebSupport DNS/Pods-WebSupport DNS.debug.xcconfig"; sourceTree = "<group>"; };
+		E907E08221768B890017EB5F /* WebSupport DNS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WebSupport DNS-Bridging-Header.h"; sourceTree = "<group>"; };
 		E9F84FE0217686A600A61C2D /* WebSupport DNS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "WebSupport DNS"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9F84FE3217686A600A61C2D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -32,17 +37,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				435B27D00EEC4A24412B24EA /* libPods-WebSupport DNS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7E2C2D4BCD7F27184FFF5827 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C5B9D05A92299567968831FD /* Pods-WebSupport DNS.debug.xcconfig */,
+				7B0C50E11B7113834052C20B /* Pods-WebSupport DNS.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		888B356F1C64A455BDFAE574 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3536A8CDD8CCA5EA74BCE2C6 /* libPods-WebSupport DNS.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E9F84FD7217686A600A61C2D = {
 			isa = PBXGroup;
 			children = (
 				E9F84FE2217686A600A61C2D /* WebSupport DNS */,
 				E9F84FE1217686A600A61C2D /* Products */,
+				7E2C2D4BCD7F27184FFF5827 /* Pods */,
+				888B356F1C64A455BDFAE574 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				E9F84FE3217686A600A61C2D /* main.swift */,
+				E907E08221768B890017EB5F /* WebSupport DNS-Bridging-Header.h */,
 			);
 			path = "WebSupport DNS";
 			sourceTree = "<group>";
@@ -69,6 +95,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E9F84FE7217686A600A61C2D /* Build configuration list for PBXNativeTarget "WebSupport DNS" */;
 			buildPhases = (
+				C9729A830F3E6167DF9180CF /* [CP] Check Pods Manifest.lock */,
 				E9F84FDC217686A600A61C2D /* Sources */,
 				E9F84FDD217686A600A61C2D /* Frameworks */,
 				E9F84FDE217686A600A61C2D /* CopyFiles */,
@@ -94,6 +121,7 @@
 				TargetAttributes = {
 					E9F84FDF217686A600A61C2D = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1000;
 					};
 				};
 			};
@@ -113,6 +141,27 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C9729A830F3E6167DF9180CF /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WebSupport DNS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E9F84FDC217686A600A61C2D /* Sources */ = {
@@ -243,20 +292,37 @@
 		};
 		E9F84FE8217686A600A61C2D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C5B9D05A92299567968831FD /* Pods-WebSupport DNS.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 53F4R854HQ;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WebSupport DNS/WebSupport DNS-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
 		E9F84FE9217686A600A61C2D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7B0C50E11B7113834052C20B /* Pods-WebSupport DNS.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 53F4R854HQ;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WebSupport DNS/WebSupport DNS-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Release;

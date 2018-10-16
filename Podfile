@@ -8,7 +8,6 @@ target 'WebSupport DNS' do
   # Pods for WebSupport DNS
 
 	pod 'Alamofire'
-	pod 'Fabric'
-	pod 'Crashlytics'
+	pod 'SharkORM'
 
 end
