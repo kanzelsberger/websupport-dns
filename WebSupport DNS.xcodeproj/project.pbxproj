@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		435B27D00EEC4A24412B24EA /* libPods-WebSupport DNS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3536A8CDD8CCA5EA74BCE2C6 /* libPods-WebSupport DNS.a */; };
+		E907E08521768CBF0017EB5F /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907E08421768CBF0017EB5F /* Configuration.swift */; };
 		E9F84FE4217686A600A61C2D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F84FE3217686A600A61C2D /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 		7B0C50E11B7113834052C20B /* Pods-WebSupport DNS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebSupport DNS.release.xcconfig"; path = "Pods/Target Support Files/Pods-WebSupport DNS/Pods-WebSupport DNS.release.xcconfig"; sourceTree = "<group>"; };
 		C5B9D05A92299567968831FD /* Pods-WebSupport DNS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebSupport DNS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WebSupport DNS/Pods-WebSupport DNS.debug.xcconfig"; sourceTree = "<group>"; };
 		E907E08221768B890017EB5F /* WebSupport DNS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WebSupport DNS-Bridging-Header.h"; sourceTree = "<group>"; };
+		E907E08421768CBF0017EB5F /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		E9F84FE0217686A600A61C2D /* WebSupport DNS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "WebSupport DNS"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9F84FE3217686A600A61C2D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +86,7 @@
 			children = (
 				E9F84FE3217686A600A61C2D /* main.swift */,
 				E907E08221768B890017EB5F /* WebSupport DNS-Bridging-Header.h */,
+				E907E08421768CBF0017EB5F /* Configuration.swift */,
 			);
 			path = "WebSupport DNS";
 			sourceTree = "<group>";
@@ -168,6 +171,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E907E08521768CBF0017EB5F /* Configuration.swift in Sources */,
 				E9F84FE4217686A600A61C2D /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

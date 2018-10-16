@@ -9,4 +9,5 @@
 import Foundation
 import Alamofire
 
+print(ProcessInfo.processInfo.arguments)
 print("Hello, World!")
