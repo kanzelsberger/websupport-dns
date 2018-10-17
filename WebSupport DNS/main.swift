@@ -19,7 +19,7 @@ enum AppError: Error {
 extension Keys {
     static let login = Key<String>("Login")
     static let password = Key<String>("Password")
-    static let updateInterval = Key<Int>("UpdateInterval")
+    static let updateInterval = Key<Double>("UpdateInterval")
     static let zone = Key<String>("Zone")
     static let records = Key<Array<String>>("Records")
 }
@@ -179,10 +179,17 @@ class App {
                 assertionFailure()
                 exit(1)
             }
+            guard let timeout = setup.get(.updateInterval) else {
+                print("Error: Configuration requires 'UpdateInterval' in minutes.")
+                assertionFailure()
+                exit(1)
+            }
             
-            print("Will update zone: \(zone), records: \(records)")
+            print("Will update zone: \(zone), records: \(records), every: \(timeout) minutes")
             self.updateZone = zone
             self.updateRecords = records
+            self.timeout = timeout
+
         } else {
             print("Error: Configuration file not found at: \(configPath)")
             assertionFailure()
