@@ -151,7 +151,7 @@ class App {
     }
     
     func run() {
-        let configPath = "/Users/pavel/.websupport.plist"
+        let configPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".websupport.plist").path
         if let setup = Configuration.init(plistPath: configPath) {
             guard let login = setup.get(.login) else {
                 assertionFailure()
