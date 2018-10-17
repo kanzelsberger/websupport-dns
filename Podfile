@@ -9,5 +9,6 @@ target 'WebSupport DNS' do
 
 	pod 'Alamofire'
 	pod 'SharkORM'
+	pod 'ObjectMapper'
 
 end
