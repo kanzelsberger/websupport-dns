@@ -1,3 +1,7 @@
+
+WebSupport DNS is a DDNS tool for websupport.sk users using CNAME records.
+
+
 This project uses Cocoapods. Run following command to install all dependencies:
 
     $ pod install
