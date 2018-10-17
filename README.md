@@ -1,5 +1,5 @@
 
-WebSupport DNS is a DDNS tool for websupport.sk users using CNAME records.
+WebSupport DNS is a DDNS tool for websupport.sk users using CNAME records. Project is written in Swift 4.2 and uses Alamofire and ObjectMapper as only dependencies. Remote IP address is obtained from https://ipify.org
 
 
 This project uses Cocoapods. Run following command to install all dependencies:
