@@ -154,10 +154,12 @@ class App {
         let configPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".websupport.plist").path
         if let setup = Configuration.init(plistPath: configPath) {
             guard let login = setup.get(.login) else {
+                print("Error: Configuration requires 'Login'")
                 assertionFailure()
                 exit(1)
             }
             guard let password = setup.get(.password) else {
+                print("Error: Configuration requires 'Password'")
                 assertionFailure()
                 exit(1)
             }
@@ -168,10 +170,12 @@ class App {
             }
             
             guard let zone = setup.get(.zone) else {
+                print("Error: Configuration requires 'Zone' as domain name.")
                 assertionFailure()
                 exit(1)
             }
             guard let records = setup.get(.records) else {
+                print("Error: Configuration requires 'Records' array of subdomain names.")
                 assertionFailure()
                 exit(1)
             }
@@ -179,6 +183,10 @@ class App {
             print("Will update zone: \(zone), records: \(records)")
             self.updateZone = zone
             self.updateRecords = records
+        } else {
+            print("Error: Configuration file not found at: \(configPath)")
+            assertionFailure()
+            exit(1)
         }
 
         // AUthenticate and retrieve user, zone and domain CNAME records that match configuration
@@ -211,11 +219,17 @@ class App {
                                     Timer.scheduledTimer(withTimeInterval: self.timeout * 60, repeats: true, block: { (timer) in
                                         self.timer()
                                     })
+                                } else {
+                                    print("Error: Failed to retrieve list of Records for zone \(zone).")
                                 }
                             })
                         }
+                    } else {
+                        print("Error: Failed to retrieve list of Zones for user: \(user).")
                     }
                 })
+            } else {
+                print("Error: Failed to retrieve User from server.")
             }
         })
 
