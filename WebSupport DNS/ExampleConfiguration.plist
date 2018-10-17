@@ -1,5 +1,9 @@
 {
-	Login = "";
+	Login = user;
 	UpdateInterval = 5;
-	Password = "";
+	Password = password;
+	Zone = "domain.com";
+	Records = (
+		subdomain,
+	);
 }

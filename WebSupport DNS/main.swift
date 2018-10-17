@@ -19,6 +19,8 @@ extension Keys {
     static let login = Key<String>("Login")
     static let password = Key<String>("Password")
     static let updateInterval = Key<Int>("UpdateInterval")
+    static let zone = Key<String>("Zone")
+    static let records = Key<Array<String>>("Records")
 }
 
 class App {
@@ -29,6 +31,9 @@ class App {
     var remoteAddress: String = "0.0.0.0"
 
     var authorizationToken: String = ""
+    
+    var updateZone: String = ""
+    var updateRecords: [String] = []
     
     func getRemoteAddress(completion: @escaping (_ address: String?, _ error: Error?) -> ()) {
         Alamofire.request("https://api.ipify.org", method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil).responseString { (response) in
@@ -67,11 +72,39 @@ class App {
     }
     
     func getZones(user: User, completion: @escaping (_ zones: [Zone]?, _ error: Error?) -> ()) {
-        
+        Alamofire.request("https://rest.websupport.sk/v1/user/\(user.id)/zone", method: .get, parameters: nil, encoding: URLEncoding.default, headers: self.headers()).responseJSON { (response) in
+            guard let json = response.result.value as? NSDictionary else {
+                completion(nil, AppError.invalidResponse)
+                assertionFailure()
+                return
+            }
+            guard let items = json["items"] else {
+                completion(nil, AppError.invalidResponse)
+                assertionFailure()
+                return
+            }
+            
+            let zones = Mapper<Zone>().mapArray(JSONObject: items) ?? []
+            completion(zones, nil)
+        }
     }
     
     func getRecords(user: User, zone: Zone, completion: @escaping (_ records: [Record]?, _ error: Error?) -> ()) {
-        
+        Alamofire.request("https://rest.websupport.sk/v1/user/\(user.id)/zone/\(zone.name)/record", method: .get, parameters: nil, encoding: URLEncoding.default, headers: self.headers()).responseJSON { (response) in
+            guard let json = response.result.value as? NSDictionary else {
+                completion(nil, AppError.invalidResponse)
+                assertionFailure()
+                return
+            }
+            guard let items = json["items"] else {
+                completion(nil, AppError.invalidResponse)
+                assertionFailure()
+                return
+            }
+
+            let records = Mapper<Record>().mapArray(JSONObject: items) ?? []
+            completion(records, nil)
+        }
     }
     
     func timer() {
@@ -84,6 +117,32 @@ class App {
                     self.getUser(completion: { (user, error) in
                         if let user = user {
                             print("Retrieved user: \(user)")
+                            
+                            self.getZones(user: user, completion: { (zones, error) in
+                                if let zones = zones {
+                                    print("Got zones: \(zones)")
+                                    
+                                    if let zone = zones.filter({ $0.name == self.updateZone }).first {
+                                        self.getRecords(user: user, zone: zone, completion: { (records, error) in
+                                            if let records = records {
+                                                print("Got records: \(records)")
+                                                
+                                                let list = records.filter({ self.updateRecords.contains($0.name) })
+                                                for item in list {
+                                                    print("Updating \(item.name).\(zone.name) ttl \(item.ttl) to \(ip) from \(item.content)")
+                                                }
+                                                
+                                            } else {
+                                                print("Error retrieveing records: \(error)")
+                                            }
+                                        })
+                                    } else {
+                                        print("Error: Cannot find zone to update")
+                                    }
+                                } else {
+                                    print("Error retrieving zones: \(error)")
+                                }
+                            })
                         } else {
                             print("Error retrieving user: \(error)")
                         }
@@ -96,9 +155,6 @@ class App {
     }
     
     func run() {
-        print(ProcessInfo.processInfo.arguments)
-        self.timer()
-        
         let configPath = "/Users/pavel/.websupport.plist"
         if let setup = Configuration.init(plistPath: configPath) {
             guard let login = setup.get(.login) else {
@@ -114,7 +170,26 @@ class App {
                 self.authorizationToken = "Basic \(payload)"
                 print("Authorization token: \(self.authorizationToken)")
             }
+            
+            guard let zone = setup.get(.zone) else {
+                assertionFailure()
+                exit(1)
+            }
+            guard let records = setup.get(.records) else {
+                assertionFailure()
+                exit(1)
+            }
+            
+            print("Will update zone: \(zone), records: \(records)")
+            self.updateZone = zone
+            self.updateRecords = records
         }
+
+        // Run timer once at startup
+        
+        self.timer()
+        
+        // Schedule timer that checks for remote IP address change periodically
 
         Timer.scheduledTimer(withTimeInterval: timeout * 60, repeats: true, block: { (timer) in
             self.timer()
