@@ -36,6 +36,10 @@ class App {
     var updateZone: String = ""
     var updateRecords: [String] = []
     
+    var user: User!
+    var zone: Zone!
+    var records: [Record] = []
+    
     func getRemoteAddress(completion: @escaping (_ address: String?, _ error: Error?) -> ()) {
         Alamofire.request("https://api.ipify.org", method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil).responseString { (response) in
             if response.response?.statusCode == 200 {
@@ -131,44 +135,14 @@ class App {
                     print("New remote address \(ip)")
                     self.remoteAddress = ip
                     
-                    self.getUser(completion: { (user, error) in
-                        if let user = user {
-                            print("Retrieved user: \(user)")
-                            
-                            self.getZones(user: user, completion: { (zones, error) in
-                                if let zones = zones {
-                                    print("Got zones: \(zones)")
-                                    
-                                    if let zone = zones.filter({ $0.name == self.updateZone }).first {
-                                        self.getRecords(user: user, zone: zone, completion: { (records, error) in
-                                            if let records = records {
-                                                print("Got records: \(records)")
-                                                
-                                                let list = records.filter({ self.updateRecords.contains($0.name) })
-                                                for item in list {
-                                                    print("Updating \(item.name).\(zone.name) ttl \(item.ttl) to \(ip) from \(item.content)")
-                                                    self.updateRecord(user: user, zone: zone, record: item, content: ip, completion: { (error) in
-                                                        if error != nil {
-                                                            print("Failed to update record: \(item), error: \(error)")
-                                                        }
-                                                    })
-                                                }
-                                                
-                                            } else {
-                                                print("Error retrieveing records: \(error)")
-                                            }
-                                        })
-                                    } else {
-                                        print("Error: Cannot find zone to update")
-                                    }
-                                } else {
-                                    print("Error retrieving zones: \(error)")
-                                }
-                            })
-                        } else {
-                            print("Error retrieving user: \(error)")
-                        }
-                    })
+                    for item in self.records {
+                        print("Updating \(item.name).\(self.zone.name) ttl \(item.ttl) to \(ip) from \(item.content)")
+                        self.updateRecord(user: self.user, zone: self.zone, record: item, content: ip, completion: { (error) in
+                            if error != nil {
+                                print("Failed to update record: \(item), error: \(error)")
+                            }
+                        })
+                    }
                 }
             } else {
                 print("Error retrieving IP address: \(error)")
@@ -207,15 +181,44 @@ class App {
             self.updateRecords = records
         }
 
-        // Run timer once at startup
+        // AUthenticate and retrieve user, zone and domain CNAME records that match configuration
         
-        self.timer()
-        
-        // Schedule timer that checks for remote IP address change periodically
-
-        Timer.scheduledTimer(withTimeInterval: timeout * 60, repeats: true, block: { (timer) in
-            self.timer()
+        self.getUser(completion: { (user, error) in
+            if let user = user {
+                self.user = user
+                print("Retrieved user: \(user)")
+                
+                self.getZones(user: user, completion: { (zones, error) in
+                    if let zones = zones {
+                        print("Got zones: \(zones)")
+                        
+                        if let zone = zones.filter({ $0.name == self.updateZone }).first {
+                            self.zone = zone
+                            print("Found configured zone: \(zone)")
+                            self.getRecords(user: user, zone: zone, completion: { (records, error) in
+                                if let records = records {
+                                    print("Got records: \(records)")
+                                    
+                                    self.records = records.filter({ self.updateRecords.contains($0.name) })
+                                    print("Found configured records: \(self.records)")
+                                    
+                                    // Run timer once at startup
+                                    
+                                    self.timer()
+                                    
+                                    // Schedule timer that checks for remote IP address change periodically
+                                    
+                                    Timer.scheduledTimer(withTimeInterval: self.timeout * 60, repeats: true, block: { (timer) in
+                                        self.timer()
+                                    })
+                                }
+                            })
+                        }
+                    }
+                })
+            }
         })
+
         RunLoop.main.run(until: Date(timeIntervalSinceNow: TimeInterval.infinity))
     }
 }
