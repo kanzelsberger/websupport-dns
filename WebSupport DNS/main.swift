@@ -13,6 +13,7 @@ import ObjectMapper
 enum AppError: Error {
     case remoteAddressFailed
     case invalidResponse
+    case requestFailed
 }
 
 extension Keys {
@@ -107,6 +108,22 @@ class App {
         }
     }
     
+    func updateRecord(user: User, zone: Zone, record: Record, content: String, completion: @escaping (_ error: Error?) -> ()) {
+        let payload: [String: Any] = [
+            "name": record.name,
+            "content": content,
+            "ttl": record.ttl
+        ]
+        Alamofire.request("https://rest.websupport.sk/v1/user/\(user.id)/zone/\(zone.name)/record/\(record.id)", method: .put, parameters: payload, encoding: JSONEncoding.default, headers: self.headers()).responseJSON { (response) in
+            if response.response?.statusCode == 200 {
+                completion(nil)
+            } else {
+                print("Request failed: \(response)")
+                completion(AppError.requestFailed)
+            }
+        }
+    }
+    
     func timer() {
         self.getRemoteAddress { (address, error) in
             if let ip = address {
@@ -130,6 +147,11 @@ class App {
                                                 let list = records.filter({ self.updateRecords.contains($0.name) })
                                                 for item in list {
                                                     print("Updating \(item.name).\(zone.name) ttl \(item.ttl) to \(ip) from \(item.content)")
+                                                    self.updateRecord(user: user, zone: zone, record: item, content: ip, completion: { (error) in
+                                                        if error != nil {
+                                                            print("Failed to update record: \(item), error: \(error)")
+                                                        }
+                                                    })
                                                 }
                                                 
                                             } else {
