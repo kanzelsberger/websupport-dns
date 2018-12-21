@@ -25,9 +25,11 @@ Configuration file will look like this:
         Login = "admin";
         Password = "l33th4xx0r";
         UpdateInterval = 5;
-        Zone = "somedomain.com";
-        Records = (
-                dev,
-                api,
-        );
+	Zones = (
+		{
+			"Zone" = "domain.com";
+			"Type" = "A";
+			"Record" = "subdomain";
+		}
+	);
     }
