@@ -2,8 +2,11 @@
 	Login = user;
 	UpdateInterval = 5;
 	Password = password;
-	Zone = "domain.com";
-	Records = (
-		subdomain,
+	Zones = (
+		{
+			Zone = "domain.com";
+			Type = A;
+			Record = subdomain;
+		},
 	);
 }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		761F2E917F6849BD1B52B3A5 /* libPods-WebSupport DNS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D0B5610F1F7337341F0EB9 /* libPods-WebSupport DNS.a */; };
 		E907E08521768CBF0017EB5F /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907E08421768CBF0017EB5F /* Configuration.swift */; };
+		E92FB9CA21CD1F4500CC82CE /* Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92FB9C921CD1F4500CC82CE /* Update.swift */; };
 		E9AA023E21770DCD006F67B8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AA023D21770DCD006F67B8 /* User.swift */; };
 		E9AA024021770DD6006F67B8 /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AA023F21770DD6006F67B8 /* Zone.swift */; };
 		E9AA024221770DE4006F67B8 /* Record.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AA024121770DE4006F67B8 /* Record.swift */; };
@@ -31,6 +32,7 @@
 		83D0B5610F1F7337341F0EB9 /* libPods-WebSupport DNS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WebSupport DNS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CB1E858123B6BDF0EA7E646 /* Pods-WebSupport DNS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebSupport DNS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WebSupport DNS/Pods-WebSupport DNS.debug.xcconfig"; sourceTree = "<group>"; };
 		E907E08421768CBF0017EB5F /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		E92FB9C921CD1F4500CC82CE /* Update.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Update.swift; sourceTree = "<group>"; };
 		E9AA023D21770DCD006F67B8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E9AA023F21770DD6006F67B8 /* Zone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zone.swift; sourceTree = "<group>"; };
 		E9AA024121770DE4006F67B8 /* Record.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Record.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				E9AA023D21770DCD006F67B8 /* User.swift */,
 				E9AA023F21770DD6006F67B8 /* Zone.swift */,
 				E9AA024121770DE4006F67B8 /* Record.swift */,
+				E92FB9C921CD1F4500CC82CE /* Update.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -188,6 +191,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E92FB9CA21CD1F4500CC82CE /* Update.swift in Sources */,
 				E907E08521768CBF0017EB5F /* Configuration.swift in Sources */,
 				E9AA024021770DD6006F67B8 /* Zone.swift in Sources */,
 				E9AA024221770DE4006F67B8 /* Record.swift in Sources */,

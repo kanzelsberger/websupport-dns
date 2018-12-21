@@ -16,6 +16,8 @@ class Record: Mappable, CustomStringConvertible {
     var name: String = ""
     var content: String = ""
     var ttl: Int = 0
+    
+    var zone: Zone!
 
     var description: String {
         return "Record {id:\(id), type:\(type), name:\(name), content:\(content), ttl:\(ttl)}"

@@ -20,6 +20,7 @@ extension Keys {
     static let login = Key<String>("Login")
     static let password = Key<String>("Password")
     static let updateInterval = Key<Double>("UpdateInterval")
+    static let zones = Key<Array<Any>>("Zones")
     static let zone = Key<String>("Zone")
     static let records = Key<Array<String>>("Records")
 }
@@ -33,11 +34,8 @@ class App {
 
     var authorizationToken: String = ""
     
-    var updateZone: String = ""
-    var updateRecords: [String] = []
-    
+    var updates: [Update] = []
     var user: User!
-    var zone: Zone!
     var records: [Record] = []
     
     func getRemoteAddress(completion: @escaping (_ address: String?, _ error: Error?) -> ()) {
@@ -136,8 +134,8 @@ class App {
                     self.remoteAddress = ip
                     
                     for item in self.records {
-                        print("Updating \(item.name).\(self.zone.name) ttl \(item.ttl) to \(ip) from \(item.content)")
-                        self.updateRecord(user: self.user, zone: self.zone, record: item, content: ip, completion: { (error) in
+                        print("Updating \(item.type) \(item.name).\(item.zone.name) ttl \(item.ttl) to \(ip) from \(item.content)")
+                        self.updateRecord(user: self.user, zone: item.zone, record: item, content: ip, completion: { (error) in
                             if error != nil {
                                 print("Failed to update record: \(item), error: \(error)")
                             }
@@ -169,25 +167,47 @@ class App {
                 print("Authorization token: \(self.authorizationToken)")
             }
             
-            guard let zone = setup.get(.zone) else {
-                print("Error: Configuration requires 'Zone' as domain name.")
+            guard let zones = setup.get(.zones) else {
+                print("Error: Configuration requires 'Zones' array of zones and records.")
                 assertionFailure()
                 exit(1)
             }
-            guard let records = setup.get(.records) else {
-                print("Error: Configuration requires 'Records' array of subdomain names.")
-                assertionFailure()
-                exit(1)
-            }
+            
             guard let timeout = setup.get(.updateInterval) else {
                 print("Error: Configuration requires 'UpdateInterval' in minutes.")
                 assertionFailure()
                 exit(1)
             }
+
+            for item in zones {
+                guard let dict: NSDictionary = item as? NSDictionary else {
+                    print("Error: Configuration requires 'Zones' array.")
+                    assertionFailure()
+                    exit(1)
+                }
+                
+                guard let zone: String = dict["Zone"] as? String else {
+                    print("Failed to read Zone from: \(dict)")
+                    assertionFailure()
+                    exit(1)
+                }
+                guard let type: String = dict["Type"] as? String else {
+                    print("Failed to read Type from: \(dict)")
+                    assertionFailure()
+                    exit(1)
+                }
+                guard let record: String = dict["Record"] as? String else {
+                    print("Failed to read Record from: \(dict)")
+                    assertionFailure()
+                    exit(1)
+                }
+                updates.append(Update(type: type, zone: zone, record: record))
+            }
             
-            print("Will update zone: \(zone), records: \(records), every: \(timeout) minutes")
-            self.updateZone = zone
-            self.updateRecords = records
+            print("Will update zones: \(updates), every: \(timeout) minutes")
+            //print("Will update zone: \(zone), records: \(records), every: \(timeout) minutes")
+            //self.updateZone = zone
+            //self.updateRecords = records
             self.timeout = timeout
 
         } else {
@@ -205,32 +225,50 @@ class App {
                 
                 self.getZones(user: user, completion: { (zones, error) in
                     if let zones = zones {
+
                         print("Got zones: \(zones)")
                         
-                        if let zone = zones.filter({ $0.name == self.updateZone }).first {
-                            self.zone = zone
+                        //if let zone = zones.filter({ $0.name == self.updateZone }).first {
+                        
+                        let zonelist = self.updates.map({ $0.zone })
+                        let unique = Array(Set(zonelist))
+                        
+                        for zone in zones.filter({ unique.contains($0.name) }) {
+                            //self.zone = zone
                             print("Found configured zone: \(zone)")
+                            
+                            let recordlist = self.updates.filter({ $0.zone == zone.name })
+                            print("Configured records: \(recordlist)")
+                            
                             self.getRecords(user: user, zone: zone, completion: { (records, error) in
                                 if let records = records {
                                     print("Got records: \(records)")
                                     
-                                    self.records = records.filter({ self.updateRecords.contains($0.name) })
-                                    print("Found configured records: \(self.records)")
+                                    for record in recordlist {
+                                        if let identified = records.filter({ $0.name == record.record && $0.type == record.type }).first {
+                                            identified.zone = zone
+                                            self.records.append(identified)
+                                        }
+                                    }
                                     
-                                    // Run timer once at startup
-                                    
-                                    self.timer()
-                                    
-                                    // Schedule timer that checks for remote IP address change periodically
-                                    
-                                    Timer.scheduledTimer(withTimeInterval: self.timeout * 60, repeats: true, block: { (timer) in
-                                        self.timer()
-                                    })
+                                    print("Identified existing records: \(self.records)")
                                 } else {
                                     print("Error: Failed to retrieve list of Records for zone \(zone).")
                                 }
                             })
                         }
+                        
+                        
+                        // Run timer once at startup
+                        
+                        self.timer()
+                        
+                        // Schedule timer that checks for remote IP address change periodically
+                        
+                        Timer.scheduledTimer(withTimeInterval: self.timeout * 60, repeats: true, block: { (timer) in
+                            self.timer()
+                        })
+
                     } else {
                         print("Error: Failed to retrieve list of Zones for user: \(user).")
                     }
